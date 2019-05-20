@@ -1,0 +1,31 @@
+# Default values for helm chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+label: flask-app-books
+namespace: default
+image:
+  path: registry.ng.bluemix.net/cs-phoenix/flask-app-books
+  tag: latest
+  pullPolicy:  Always
+
+issuer: letsencrypt-issuer
+
+ingress:
+  host:
+  path: /
+
+service:
+  port: 5000
+
+replicas: 1
+appid:
+  bindSecret:
+
+postgres:
+  db:
+  host:
+  port:
+  user:
+  password:
+
+email: x.y@ibm.com

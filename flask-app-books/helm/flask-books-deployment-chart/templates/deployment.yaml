@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.label }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    name: {{ .Values.label }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Values.label }}
+  template:
+    metadata:
+      name: {{ .Values.label }}-deployment
+      labels:
+        name: {{ .Values.label }}
+    spec:
+      containers:
+        - name: {{ .Values.label }}
+          image: {{ .Values.image.path }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.label }}-secret
+                  key: user
+            - name: POSTGRES_PW
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.label }}-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.label }}-config

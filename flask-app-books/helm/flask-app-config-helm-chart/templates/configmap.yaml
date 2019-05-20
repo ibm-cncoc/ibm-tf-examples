@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ .Values.configmap }}
+  namespace: {{ .Values.namespace }}
+  labels: 
+    name: {{ .Values.label }}
+
+data:
+  APP_SETTINGS: config.DevelopmentConfig
+  POSTGRES_DB: test
+  POSTGRES_HOST: 0fbcb2ce-4b6f-443e-a843-67be7553646b.8f7bfd8f3faa4218aec56e069eb46187.databases.appdomain.cloud
+  POSTGRES_PORT: "30568"
+

@@ -1,0 +1,42 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: flask-app-books
+  labels:
+    name: flask-app-books
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: flask-app-books
+  template:
+    metadata:
+      name: flask-app-books
+      labels:
+        name: flask-app-books
+    spec:
+      containers:
+        - name: flask-app-books
+          image: registry.ng.bluemix.net/cs-phoenix/flask-app-books
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef: 
+                  name: postgres-secret
+                  key: user
+            - name: POSTGRES_PW
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: books-app-config

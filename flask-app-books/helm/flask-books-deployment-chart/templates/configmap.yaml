@@ -1,0 +1,11 @@
+# Source: flask-app-config-helm-chart/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.label }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  APP_SETTINGS: config.DevelopmentConfig
+  POSTGRES_DB: {{ .Values.postgres.db }}
+  POSTGRES_HOST: {{ .Values.postgres.host }}
+  POSTGRES_PORT: "{{ .Values.postgres.port }}"

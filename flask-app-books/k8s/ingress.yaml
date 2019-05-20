@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cn-app
+  labels:
+    app: cn-app
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+    ingress.bluemix.net/rewrite-path: "serviceName=flask-app-books rewrite=/"
+    ingress.bluemix.net/appid-auth: bindSecret=binding-cn-app-id namespace=default requestType=web serviceName=flask-app-books;
+spec:
+  rules:
+  - host: cn-app-k8s.us-south.containers.appdomain.cloud 
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: flask-app-books 
+          servicePort: 5000
+  tls:
+  - hosts:
+    - cn-app-k8s.us-south.containers.appdomain.cloud 
+    secretName: cn-app-cert-secret

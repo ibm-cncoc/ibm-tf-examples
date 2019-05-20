@@ -1,0 +1,13 @@
+# Define a certificate issuer.
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: {{ .Values.issuer }}
+  namespace: {{ .Values.namespace }}
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.email}}
+    privateKeySecretRef:
+      name: letsencrypt
+    http01: {}

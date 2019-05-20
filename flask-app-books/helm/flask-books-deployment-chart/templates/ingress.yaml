@@ -1,0 +1,26 @@
+#Define Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.label }}-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    name: {{ .Values.label }}
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+    {{ if .Values.appid.bindSecret }}
+    ingress.bluemix.net/appid-auth: "bindSecret={{ .Values.appid.bindSecret }} namespace={{ .Values.namespace }} requestType=web serviceName={{ .Values.label }}-service"
+    {{ end }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Values.label }}-service
+          servicePort: {{ .Values.service.port }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.label }}-cert-secret

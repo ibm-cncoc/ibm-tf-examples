@@ -1,0 +1,57 @@
+# Define a certificate issuer.
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: letsencrypt-issuer
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: oliver.delgado@ibm.com
+    privateKeySecretRef:
+      name: letsencrypt
+    http01: {}
+---
+# Define a certificate.
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: cn-app-certificate
+spec:
+  secretName: cn-app-cert-secret
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: Issuer
+  commonName: cn-app-k8s.us-south.containers.appdomain.cloud 
+  dnsNames:
+  - "cn-app-k8s.us-south.containers.appdomain.cloud"
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - "cn-app-k8s.us-south.containers.appdomain.cloud"
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cn-app
+  labels:
+    app: cn-app
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+    ingress.bluemix.net/rewrite-path: "serviceName=flask-app-books rewrite=/"
+    ingress.bluemix.net/appid-auth: bindSecret=binding-cn-app-id namespace=default requestType=web serviceName=flask-app-books;
+spec:
+  rules:
+  - host: cn-app-k8s.us-south.containers.appdomain.cloud 
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: flask-app-books 
+          servicePort: 5000
+  tls:
+  - hosts:
+    - cn-app-k8s.us-south.containers.appdomain.cloud 
+    secretName: cn-app-cert-secret
