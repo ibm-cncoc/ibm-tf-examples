@@ -38,11 +38,6 @@ ADD config.py /root/books
 ADD manage.py /root/books
 ADD models.py /root/books
 
-
-#EXPORT VARIABLES
-#ENV APP_SETTINGS config.DevelopmentConfig
-#ENV DATABASE_URL postgres://ibm_cloud_a68d959e_f4f5_4a34_a2dc_7b240e7b8c5e:394e37ffc430d46f5fbd61466934e132fdc54884701c8885f0976b180e7e9ccc@0fbcb2ce-4b6f-443e-a843-67be7553646b.8f7bfd8f3faa4218aec56e069eb46187.databases.appdomain.cloud:30568/test
-
 # Add the netry point script
 ADD docker-entrypoint.sh /root/books
 RUN chmod +x /root/books/docker-entrypoint.sh
